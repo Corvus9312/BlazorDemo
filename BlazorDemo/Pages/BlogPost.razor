@@ -1,5 +1,23 @@
-﻿@page "/blog/1"
+﻿@page "/blog/{Id:int}"
+
 
 <div class="ms-auto pb-5">
-    文章1
+    @Content
 </div>
+
+@code{
+    [Parameter]
+    public int Id { get; set; }
+
+    public string Content { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        Content = Id switch
+        {
+            1 => "前言",
+            2 => "簡介",
+            _ => string.Empty
+        };
+    }
+}
