@@ -1,0 +1,27 @@
+﻿@page "/comment"
+
+<div class="comments">
+    <div class="comment-content">
+        @Comments
+    </div>
+    <div class="post-comment">
+        <input type="text" @bind=Preview @bind:event="oninput" />
+        <input type="button" @onclick=ButtonOnClick value="送出" />
+    </div>
+    <div class="Preview">
+        @Preview
+    </div>
+</div>
+
+@code {
+    public string Comments { get; set; } = string.Empty;
+
+    public string Preview { get; set; } = string.Empty;
+
+    protected void ButtonOnClick()
+    {
+        Comments = Preview;
+
+        Preview = string.Empty;
+    }
+}
