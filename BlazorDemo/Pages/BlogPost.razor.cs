@@ -14,6 +14,8 @@ public class BlogPostBase : ComponentBase
 
     public string Content { get; set; } = null!;
 
+    public List<string> Comments { get; set; } = new();
+
     protected override void OnParametersSet()
     {
         if (Id.Equals(1))
@@ -34,6 +36,15 @@ public class BlogPostBase : ComponentBase
             _ => string.Empty
         };
 
+        Comments = new();
+
         base.OnParametersSet();
+    }
+
+    protected void ButtonOnClick(List<string> comments)
+    {
+        Comments = comments;
+
+        StateHasChanged();
     }
 }

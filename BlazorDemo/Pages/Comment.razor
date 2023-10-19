@@ -1,27 +1,31 @@
-﻿@page "/comment"
-
-<div class="comments">
-    <div class="comment-content">
-        @Comments
-    </div>
+﻿<div class="comments">
+    @foreach (var comment in Comments)
+    {
+        <div class="comment-content">
+            @comment
+        </div>
+    }
     <div class="post-comment">
         <input type="text" @bind=Preview @bind:event="oninput" />
         <input type="button" @onclick=ButtonOnClick value="送出" />
     </div>
-    <div class="Preview">
-        @Preview
-    </div>
 </div>
 
 @code {
-    public string Comments { get; set; } = string.Empty;
+    [Parameter]
+    public List<string> Comments { get; set; } = new();
 
     public string Preview { get; set; } = string.Empty;
 
-    protected void ButtonOnClick()
+    [Parameter]
+    public EventCallback<List<string>> ButtonClick { get; set; }
+
+    protected async Task ButtonOnClick()
     {
-        Comments = Preview;
+        Comments.Add(Preview);
 
         Preview = string.Empty;
+
+        await ButtonClick.InvokeAsync(Comments);
     }
 }

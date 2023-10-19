@@ -4,5 +4,9 @@
 <div class="ms-auto pb-5">
     @Content
 </div>
-
+<p style="font-size: 0.75em">留言數：@Comments.Count()</p>
 <BlogPostFooter Previous="Previous" Next="Next"></BlogPostFooter>
+
+<div id="comment">
+    <Comment Comments=Comments ButtonClick="ButtonOnClick"></Comment>
+</div>
