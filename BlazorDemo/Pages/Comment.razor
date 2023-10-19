@@ -6,26 +6,36 @@
         </div>
     }
     <div class="post-comment">
-        <input type="text" @bind=Preview @bind:event="oninput" />
+        <p class="m-0">姓名</p>
+        <input type="text" @bind=Preview.Name />
+        <p class="m-0">留言內容</p>
+        <textarea @bind="Preview.Content" type="text" class="form-control" />
         <input type="button" @onclick=ButtonOnClick value="送出" />
     </div>
 </div>
 
 @code {
     [Parameter]
-    public List<string> Comments { get; set; } = new();
+    public List<CommentModel> Comments { get; set; } = new();
 
-    public string Preview { get; set; } = string.Empty;
+    public CommentModel Preview { get; set; } = new();
 
     [Parameter]
-    public EventCallback<List<string>> ButtonClick { get; set; }
+    public EventCallback<List<CommentModel>> ButtonClick { get; set; }
 
     protected async Task ButtonOnClick()
     {
         Comments.Add(Preview);
 
-        Preview = string.Empty;
+        Preview = new();
 
         await ButtonClick.InvokeAsync(Comments);
+    }
+
+    public class CommentModel
+    {
+        public string Name { get; set; } = null!;
+
+        public string Content { get; set; } = null!;
     }
 }

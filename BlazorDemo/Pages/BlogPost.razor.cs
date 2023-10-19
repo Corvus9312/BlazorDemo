@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using static BlazorDemo.Pages.BlogPostFooter;
+using static BlazorDemo.Pages.Comment;
 
 namespace BlazorDemo.Pages;
 
@@ -14,7 +15,7 @@ public class BlogPostBase : ComponentBase
 
     public string Content { get; set; } = null!;
 
-    public List<string> Comments { get; set; } = new();
+    public List<CommentModel> Comments { get; set; } = new();
 
     protected override void OnParametersSet()
     {
@@ -41,7 +42,7 @@ public class BlogPostBase : ComponentBase
         base.OnParametersSet();
     }
 
-    protected void ButtonOnClick(List<string> comments)
+    protected void ButtonOnClick(List<CommentModel> comments)
     {
         Comments = comments;
 
