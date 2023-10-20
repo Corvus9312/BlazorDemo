@@ -1,15 +1,43 @@
 ﻿<div class="comments">
     @foreach (var comment in Comments)
     {
-        <div class="comment-content">
-            @comment
+        <div class="comment-content" style="background-color: #f2f2f2">
+            <p class="m-0">主旨：@comment.Subject</p>
+            <p class ="m-1" style="font-size: 0.7em">@comment.CreateTime</p>
+            @if (comment.Anonymous)
+            {
+                <p class="m-1">Anonymous</p>
+            }
+            else
+            {
+                <p class="m-1">@comment.Name</p>
+            }
+            <p class="m-1">@comment.Content</p>
         </div>
     }
     <div class="post-comment">
+        <label>
+            <label><input type="radio" name="anonymous" @onchange="@(() => SetAnonymous(true))" checked="@Preview.Anonymous.Equals(true)" />匿名</label>
+            <label><input type="radio" name="anonymous" @onchange="@(() => SetAnonymous(false))" checked="@Preview.Anonymous.Equals(false)" />顯示姓名</label>
+        </label>
+        <p class="m-0">留言主題</p>
+        <select @bind="Preview.Subject">
+            <option value="文章錯誤">文章錯誤</option>
+            <option value="程式交流">程式交流</option>
+        </select>
         <p class="m-0">姓名</p>
         <input type="text" @bind=Preview.Name />
+        <p class="m-0">留言時間</p>
+        <input type="datetime-local" @bind=Preview.CreateTime />
         <p class="m-0">留言內容</p>
         <textarea @bind="Preview.Content" type="text" class="form-control" />
+        <label>
+            <input type="checkbox" @bind=Preview.Notify />
+            <span>回覆通知</span>
+        </label>
+        <p class="m-0">上傳附件</p>
+        <InputFile OnChange="FileChangeHandler" accept=".txt,.cs"></InputFile>
+        <br />
         <input type="button" @onclick=ButtonOnClick value="送出" />
     </div>
 </div>
@@ -32,10 +60,32 @@
         await ButtonClick.InvokeAsync(Comments);
     }
 
+    protected void SetAnonymous(bool anonymous) => Preview.Anonymous = anonymous;
+
+    protected async Task FileChangeHandler(InputFileChangeEventArgs e)
+    {
+        IBrowserFile file = e.File;
+
+        byte[] bytes = new byte[file.Size];
+        await file.OpenReadStream(maxAllowedSize: file.Size + 1).ReadAsync(bytes);
+
+        Preview.Bytes = bytes;
+    }
+
     public class CommentModel
     {
+        public bool Anonymous { get; set; } = false;
+
+        public string Subject { get; set; } = "文章錯誤";
+
         public string Name { get; set; } = null!;
 
+        public DateTime CreateTime { get; set; } = DateTime.Now;
+
         public string Content { get; set; } = null!;
+
+        public bool Notify { get; set; } = false;
+
+        public byte[]? Bytes { get; set; }
     }
 }
